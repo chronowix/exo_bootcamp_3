@@ -1,12 +1,16 @@
 import mongoose from 'mongoose';
 
-//TODO: connecter à MongoDB avec l'URI depuis le fichier .env
-export const connectDB = async (): Promise<void> => {
+export const connectDB = async () => {
+    const uri = process.env.MONGO_URI;
+    if (!uri) {
+        throw new Error("MONGO_URI is not defined in .env");
+    }
+
     try {
-        await mongoose.connect(process.env.MONGODB_URI as string);
-        console.log('MongoDB Connected');
-    } catch (error) {
-        console.log("DB connection failed");
+        await mongoose.connect(uri);
+        console.log("MongoDB connected");
+    } catch (err) {
+        console.error("DB connection failed", err);
         process.exit(1);
     }
-}
+};
